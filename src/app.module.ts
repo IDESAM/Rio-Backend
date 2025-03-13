@@ -3,27 +3,21 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostgresConfigService } from './config/postgres.config.service';
 
-import { ProdutoModule } from './produto/produto.module';
-import { UsuarioModule } from './usuario/usuario.module';
-import { MadeiraModule } from './madeira/madeira.module';
-import { MaquinaModule } from './maquina/maquina.module';
-import { ProcessoModule } from './processo/processo.module';
-import { ColaboradorModule } from './colaborador/colaborador.module';
-import { CompradorModule } from './comprador/comprador.module';
-import { PedidoModule } from './pedido/pedido.module';
-import { ItemPedidoModule } from './itemPedido/itemPedido.module';
+import { ClienteModule } from './clientes/cliente.module';
+import { SafModule } from './safs/saf.module';
+import { ComunidadeModule } from './comunidades/comunidade.module';
+import { ProprietarioModule } from './proprietarios/proprietario.module';
+import { PlantioModule } from './plantios/plantio.module';
+import { UsuarioModule } from './usuarios/usuario.module';
 
 @Module({
   imports: [
+    ClienteModule,
+    SafModule,
+    ComunidadeModule,
+    ProprietarioModule,
+    PlantioModule,
     UsuarioModule,
-    ProdutoModule,
-    MadeiraModule,
-    MaquinaModule,
-    ProcessoModule,
-    ColaboradorModule,
-    CompradorModule,
-    PedidoModule,
-    ItemPedidoModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -33,4 +27,4 @@ import { ItemPedidoModule } from './itemPedido/itemPedido.module';
     }),
   ],
 })
-export class AppModule {}
+export class AppModule { }
