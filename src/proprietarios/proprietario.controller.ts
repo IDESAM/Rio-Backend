@@ -5,30 +5,35 @@ import { UpdateProprietarioDto } from './dto/update-proprietario.dto';
 
 @Controller('proprietarios')
 export class ProprietarioController {
-  constructor(private readonly proprietarioService: ProprietarioService) {}
+  constructor(private readonly service: ProprietarioService) { }
 
   @Get()
   findAll() {
-    return this.proprietarioService.findAll();
+    return this.service.findAll();
+  }
+
+  @Get('verificar/:nome')
+  verificar(@Param('nome') nome: string) {
+    return this.service.verificar(nome);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.proprietarioService.findOne(id);
+    return this.service.findOne(id);
   }
 
   @Post()
-  create(@Body() createProprietarioDto: CreateProprietarioDto) {
-    return this.proprietarioService.create(createProprietarioDto);
+  create(@Body() dto: CreateProprietarioDto) {
+    return this.service.create(dto);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateProprietarioDto: UpdateProprietarioDto) {
-    return this.proprietarioService.update(id, updateProprietarioDto);
+  update(@Param('id') id: string, @Body() dto: UpdateProprietarioDto) {
+    return this.service.update(id, dto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.proprietarioService.remove(id);
+    return this.service.remove(id);
   }
 }

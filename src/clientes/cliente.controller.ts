@@ -5,11 +5,17 @@ import { UpdateClienteDto } from './dto/update-cliente.dto';
 
 @Controller('clientes')
 export class ClienteController {
-  constructor(private readonly clienteService: ClienteService) {}
+  constructor(private readonly clienteService: ClienteService) { }
 
   @Get()
   findAll() {
     return this.clienteService.findAll();
+  }
+
+  @Get('verificar/:id')
+  async verificar(@Param('id') id: string) {
+    const existe = await this.clienteService.existe(id);
+    return { existe };
   }
 
   @Get(':id')

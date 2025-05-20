@@ -9,32 +9,42 @@ import { UpdateProprietarioDto } from './dto/update-proprietario.dto';
 export class ProprietarioService {
   constructor(
     @InjectRepository(Proprietario)
-    private readonly proprietarioRepository: Repository<Proprietario>,
-  ) {}
+    private readonly repo: Repository<Proprietario>,
+  ) { }
 
   async findAll(): Promise<Proprietario[]> {
-    return this.proprietarioRepository.find();
+    return this.repo.find();
   }
 
   async findOne(id: string): Promise<Proprietario> {
-    const proprietario = await this.proprietarioRepository.findOne({ where: { id } });
-    if (!proprietario) throw new NotFoundException('Proprietário não encontrado');
-    return proprietario;
+    const prop = await this.repo.findOne({ where: { id } });
+    if (!prop) throw new NotFoundException('Proprietário não encontrado');
+    return prop;
   }
 
-  async create(createProprietarioDto: CreateProprietarioDto): Promise<Proprietario> {
-    const proprietario = this.proprietarioRepository.create(createProprietarioDto);
-    return this.proprietarioRepository.save(proprietario);
+  async create(dto: CreateProprietarioDto): Promise<Proprietario> {
+    const nome = dto.nome.toUpperCase();
+    const existente = await this.repo.findOne({ where: { nome } });
+
+    if (existente) return existente;
+
+    const novo = this.repo.create({ nome });
+    return this.repo.save(novo);
   }
 
-  async update(id: string, updateProprietarioDto: UpdateProprietarioDto): Promise<Proprietario> {
+  async verificar(nome: string): Promise<{ id: string } | null> {
+    const prop = await this.repo.findOne({ where: { nome: nome.toUpperCase() } });
+    return prop ? { id: prop.id } : null;
+  }
+
+  async update(id: string, dto: UpdateProprietarioDto): Promise<Proprietario> {
     await this.findOne(id);
-    await this.proprietarioRepository.update(id, updateProprietarioDto);
+    await this.repo.update(id, dto);
     return this.findOne(id);
   }
 
   async remove(id: string): Promise<void> {
     await this.findOne(id);
-    await this.proprietarioRepository.delete(id);
+    await this.repo.delete(id);
   }
 }

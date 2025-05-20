@@ -50,4 +50,9 @@ export class ClienteService {
     const cliente = await this.findOne(id);
     await this.clienteRepository.delete(cliente.id);
   }
+
+  async existe(id: string): Promise<boolean> {
+    const cliente = await this.clienteRepository.findOne({ where: { id } });
+    return !!cliente;
+  }
 }

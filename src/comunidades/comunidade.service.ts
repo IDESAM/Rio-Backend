@@ -10,7 +10,7 @@ export class ComunidadeService {
   constructor(
     @InjectRepository(Comunidade)
     private readonly comunidadeRepository: Repository<Comunidade>,
-  ) {}
+  ) { }
 
   async findAll(): Promise<Comunidade[]> {
     return this.comunidadeRepository.find();
@@ -22,14 +22,24 @@ export class ComunidadeService {
     return comunidade;
   }
 
-  async create(createComunidadeDto: CreateComunidadeDto): Promise<Comunidade> {
-    const comunidade = this.comunidadeRepository.create(createComunidadeDto);
-    return this.comunidadeRepository.save(comunidade);
+  async create(dto: CreateComunidadeDto): Promise<Comunidade> {
+    const nome = dto.nome.toUpperCase();
+    const existente = await this.comunidadeRepository.findOne({ where: { nome } });
+
+    if (existente) return existente;
+
+    const nova = this.comunidadeRepository.create({ nome });
+    return this.comunidadeRepository.save(nova);
   }
 
-  async update(id: string, updateComunidadeDto: UpdateComunidadeDto): Promise<Comunidade> {
+  async verificar(nome: string): Promise<{ id: string } | null> {
+    const comunidade = await this.comunidadeRepository.findOne({ where: { nome: nome.toUpperCase() } });
+    return comunidade ? { id: comunidade.id } : null;
+  }
+
+  async update(id: string, dto: UpdateComunidadeDto): Promise<Comunidade> {
     await this.findOne(id);
-    await this.comunidadeRepository.update(id, updateComunidadeDto);
+    await this.comunidadeRepository.update(id, dto);
     return this.findOne(id);
   }
 

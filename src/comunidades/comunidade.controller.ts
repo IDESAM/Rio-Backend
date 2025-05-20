@@ -5,11 +5,16 @@ import { UpdateComunidadeDto } from './dto/update-comunidade.dto';
 
 @Controller('comunidades')
 export class ComunidadeController {
-  constructor(private readonly comunidadeService: ComunidadeService) {}
+  constructor(private readonly comunidadeService: ComunidadeService) { }
 
   @Get()
   findAll() {
     return this.comunidadeService.findAll();
+  }
+
+  @Get('verificar/:nome')
+  verificar(@Param('nome') nome: string) {
+    return this.comunidadeService.verificar(nome);
   }
 
   @Get(':id')
@@ -18,13 +23,13 @@ export class ComunidadeController {
   }
 
   @Post()
-  create(@Body() createComunidadeDto: CreateComunidadeDto) {
-    return this.comunidadeService.create(createComunidadeDto);
+  create(@Body() dto: CreateComunidadeDto) {
+    return this.comunidadeService.create(dto);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateComunidadeDto: UpdateComunidadeDto) {
-    return this.comunidadeService.update(id, updateComunidadeDto);
+  update(@Param('id') id: string, @Body() dto: UpdateComunidadeDto) {
+    return this.comunidadeService.update(id, dto);
   }
 
   @Delete(':id')
