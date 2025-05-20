@@ -22,7 +22,7 @@ export class PlantioService {
     private readonly comunidadeRepository: Repository<Comunidade>,
     @InjectRepository(Proprietario)
     private readonly proprietarioRepository: Repository<Proprietario>,
-  ) {}
+  ) { }
 
   async findAll(): Promise<Plantio[]> {
     return this.plantioRepository.find();
@@ -72,5 +72,22 @@ export class PlantioService {
   async remove(id: string): Promise<void> {
     await this.findOne(id);
     await this.plantioRepository.delete(id);
+  }
+
+  async verificarDuplicado(dto: CreatePlantioDto): Promise<boolean> {
+    const plantios = await this.plantioRepository.find({
+      relations: ['cliente', 'saf', 'comunidade', 'proprietario'],
+    });
+
+    return plantios.some((p) =>
+      p.cliente.id === dto.clienteId &&
+      p.saf.id === dto.safId &&
+      p.comunidade.id === dto.comunidadeId &&
+      p.proprietario.id === dto.proprietarioId &&
+      p.anoCompensacao === dto.anoCompensacao &&
+      Number(p.tCO2Compensadas.toFixed(2)) === Number(dto.tCO2Compensadas.toFixed(2)) &&
+      p.numeroArvores === dto.numeroArvores &&
+      Number(p.areaM2.toFixed(2)) === Number(dto.areaM2.toFixed(2))
+    );
   }
 }

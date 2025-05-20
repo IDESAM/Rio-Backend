@@ -5,7 +5,7 @@ import { UpdatePlantioDto } from './dto/update-plantio.dto';
 
 @Controller('plantios')
 export class PlantioController {
-  constructor(private readonly plantioService: PlantioService) {}
+  constructor(private readonly plantioService: PlantioService) { }
 
   @Get()
   findAll() {
@@ -30,5 +30,11 @@ export class PlantioController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.plantioService.remove(id);
+  }
+
+  @Post('verificar')
+  async verificar(@Body() dto: CreatePlantioDto) {
+    const existe = await this.plantioService.verificarDuplicado(dto);
+    return { existe };
   }
 }
