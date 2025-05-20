@@ -12,6 +12,12 @@ export class PlantioController {
     return this.plantioService.findAll();
   }
 
+  @Post('verificar')
+  async verificar(@Body() dto: CreatePlantioDto) {
+    const existe = await this.plantioService.verificarDuplicado(dto);
+    return { existe };
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.plantioService.findOne(id);
@@ -30,11 +36,5 @@ export class PlantioController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.plantioService.remove(id);
-  }
-
-  @Post('verificar')
-  async verificar(@Body() dto: CreatePlantioDto) {
-    const existe = await this.plantioService.verificarDuplicado(dto);
-    return { existe };
   }
 }
