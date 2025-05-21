@@ -85,9 +85,9 @@ export class PlantioService {
       p.comunidade.id === dto.comunidadeId &&
       p.proprietario.id === dto.proprietarioId &&
       p.anoCompensacao === dto.anoCompensacao &&
-      Number(p.tCO2Compensadas.toFixed(2)) === Number(dto.tCO2Compensadas.toFixed(2)) &&
+      Number(Number(p.tCO2Compensadas).toFixed(2)) === Number(Number(dto.tCO2Compensadas).toFixed(2)) &&
       p.numeroArvores === dto.numeroArvores &&
-      Number(p.areaM2.toFixed(2)) === Number(dto.areaM2.toFixed(2))
+      Number(Number(p.areaM2).toFixed(2)) === Number(Number(dto.areaM2).toFixed(2))
     );
   }
 }
