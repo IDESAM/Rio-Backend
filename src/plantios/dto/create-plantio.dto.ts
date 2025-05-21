@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsNumber, Matches } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreatePlantioDto {
   @IsNotEmpty()
@@ -18,14 +19,17 @@ export class CreatePlantioDto {
   anoCompensacao: number;
 
   @IsNotEmpty()
+  @Type(() => Number)
   @IsNumber()
   tCO2Compensadas: number;
 
   @IsNotEmpty()
+  @Type(() => Number)
   @IsNumber()
   numeroArvores: number;
 
   @IsNotEmpty()
+  @Type(() => Number)
   @IsNumber()
   areaM2: number;
 }
