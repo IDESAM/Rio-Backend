@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreatePlantioDto {
@@ -32,4 +32,9 @@ export class CreatePlantioDto {
   @Type(() => Number)
   @IsNumber()
   areaM2: number;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  imagens?: string[];
 }

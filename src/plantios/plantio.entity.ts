@@ -32,4 +32,7 @@ export class Plantio {
 
   @Column('decimal', { precision: 10, scale: 2 })
   areaM2: number;
+
+  @Column("text", { array: true, nullable: true })
+  imagens?: string[];
 }

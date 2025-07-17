@@ -58,6 +58,7 @@ export class PlantioService {
       saf,
       comunidade,
       proprietario,
+      imagens: dto.imagens,
     });
 
     return this.plantioRepository.save(plantio);

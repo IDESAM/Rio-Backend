@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional } from 'class-validator';
 
 export class CreateClienteDto {
   @IsNotEmpty()
@@ -8,5 +8,8 @@ export class CreateClienteDto {
   @IsNotEmpty()
   @IsString()
   nome: string;
-}
 
+  @IsOptional()
+  @IsString()
+  imagem?: string;
+}

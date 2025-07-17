@@ -1,4 +1,4 @@
-import { IsOptional, IsNumber, IsUUID } from 'class-validator';
+import { IsOptional, IsNumber, IsUUID, IsArray, IsString } from 'class-validator';
 
 export class UpdatePlantioDto {
   @IsOptional()
@@ -32,4 +32,9 @@ export class UpdatePlantioDto {
   @IsOptional()
   @IsNumber()
   areaM2?: number;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  imagens?: string[];
 }
