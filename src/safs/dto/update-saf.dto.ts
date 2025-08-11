@@ -1,4 +1,4 @@
-import { IsOptional, IsNumber } from 'class-validator';
+import { IsOptional, IsNumber, IsString } from 'class-validator';
 
 export class UpdateSafDto {
   @IsOptional()
@@ -11,4 +11,8 @@ export class UpdateSafDto {
   @IsOptional()
   @IsNumber()
   longitude?: number;
+
+  @IsOptional()
+  @IsString({ each: true })
+  imagens?: string[];
 }

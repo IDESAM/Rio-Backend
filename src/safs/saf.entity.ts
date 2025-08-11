@@ -13,4 +13,8 @@ export class SAF {
 
   @Column('decimal', { precision: 9, scale: 6 })
   longitude: number;
+
+  @Column('text', { array: true, nullable: true })
+  imagens?: string[];
 }
+

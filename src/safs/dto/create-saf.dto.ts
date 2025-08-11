@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateSafDto {
   @IsNotEmpty()
@@ -9,4 +9,8 @@ export class CreateSafDto {
 
   @IsNumber()
   longitude: number;
+
+  @IsOptional()
+  @IsString({ each: true })
+  imagens?: string[];
 }
