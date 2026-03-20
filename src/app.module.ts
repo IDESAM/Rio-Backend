@@ -7,17 +7,17 @@ import { ClienteModule } from './clientes/cliente.module';
 import { SafModule } from './safs/saf.module';
 import { ComunidadeModule } from './comunidades/comunidade.module';
 import { ProprietarioModule } from './proprietarios/proprietario.module';
-import { PlantioModule } from './plantios/plantio.module';
 import { UsuarioModule } from './usuarios/usuario.module';
+import { CertificadosModule } from './certificados/certificado.module';
 
 @Module({
   imports: [
     ClienteModule,
     SafModule,
     ComunidadeModule,
-    ProprietarioModule,
-    PlantioModule,
+    ProprietarioModule, 
     UsuarioModule,
+    CertificadosModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),

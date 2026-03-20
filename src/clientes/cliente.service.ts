@@ -1,58 +1,88 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Cliente } from './cliente.entity';
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
 
 @Injectable()
-export class ClienteService {
+export class ClientesService {
   constructor(
     @InjectRepository(Cliente)
     private readonly clienteRepository: Repository<Cliente>,
-  ) { }
+  ) {}
 
-  async findAll(): Promise<Cliente[]> {
-    return this.clienteRepository.find();
+  async create(createClienteDto: CreateClienteDto): Promise<Cliente> {
+    const nomeNormalizado = createClienteDto.nome.trim();
+
+    const clienteExistente = await this.clienteRepository.findOne({
+      where: { nome: ILike(nomeNormalizado) },
+    });
+
+    if (clienteExistente) {
+      throw new ConflictException('Já existe um cliente com esse nome.');
+    }
+
+    const cliente = this.clienteRepository.create({
+      nome: nomeNormalizado,
+      ativo: createClienteDto.ativo ?? true,
+    });
+
+    return this.clienteRepository.save(cliente);
   }
 
-  async findOne(id: string): Promise<Cliente> {
-    const cliente = await this.clienteRepository.findOne({ where: { id } });
+  async findAll(): Promise<Cliente[]> {
+    return this.clienteRepository.find({
+      order: { nome: 'ASC' },
+    });
+  }
+
+  async findOne(id: number): Promise<Cliente> {
+    const cliente = await this.clienteRepository.findOne({
+      where: { id },
+      relations: ['certificados'],
+    });
+
     if (!cliente) {
-      throw new NotFoundException(`Cliente com ID ${id} não encontrado`);
+      throw new NotFoundException('Cliente não encontrado.');
     }
+
     return cliente;
   }
 
-  async create(dto: CreateClienteDto): Promise<Cliente> {
-    const { id, nome } = dto;
+  async update(
+    id: number,
+    updateClienteDto: UpdateClienteDto,
+  ): Promise<Cliente> {
+    const cliente = await this.findOne(id);
 
-    // Verifica se o ID já existe no banco de dados
-    const clienteExistente = await this.clienteRepository.findOne({ where: { id } });
-    if (clienteExistente) {
-      throw new BadRequestException(`Já existe um cliente com o ID ${id}`);
+    if (updateClienteDto.nome) {
+      const nomeNormalizado = updateClienteDto.nome.trim();
+
+      const clienteExistente = await this.clienteRepository.findOne({
+        where: { nome: ILike(nomeNormalizado) },
+      });
+
+      if (clienteExistente && clienteExistente.id !== id) {
+        throw new ConflictException('Já existe um cliente com esse nome.');
+      }
+
+      cliente.nome = nomeNormalizado;
     }
 
-    // Cria e salva o cliente
-    const cliente = this.clienteRepository.create({ id, nome });
+    if (typeof updateClienteDto.ativo === 'boolean') {
+      cliente.ativo = updateClienteDto.ativo;
+    }
+
     return this.clienteRepository.save(cliente);
   }
 
-  async update(id: string, dto: UpdateClienteDto): Promise<Cliente> {
+  async remove(id: number): Promise<void> {
     const cliente = await this.findOne(id);
-
-    // Atualiza os dados e salva no banco
-    Object.assign(cliente, dto);
-    return this.clienteRepository.save(cliente);
-  }
-
-  async remove(id: string): Promise<void> {
-    const cliente = await this.findOne(id);
-    await this.clienteRepository.delete(cliente.id);
-  }
-
-  async existe(id: string): Promise<boolean> {
-    const cliente = await this.clienteRepository.findOne({ where: { id } });
-    return !!cliente;
+    await this.clienteRepository.remove(cliente);
   }
 }

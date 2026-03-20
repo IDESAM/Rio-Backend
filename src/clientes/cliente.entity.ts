@@ -1,14 +1,30 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Certificado } from '../certificados/certificado.entity';
 
 @Entity('clientes')
 export class Cliente {
-    @PrimaryColumn()
-    id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    nome: string;
+  @Column({ type: 'varchar', length: 255 })
+  nome: string;
 
-    @Column({ nullable: true })
-    imagem?: string; // campo opcional para URL da imagem
+  @Column({ type: 'boolean', default: true })
+  ativo: boolean;
+
+  @OneToMany(() => Certificado, (certificado) => certificado.cliente)
+  certificados: Certificado[];
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 }
-

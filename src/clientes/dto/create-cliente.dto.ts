@@ -1,15 +1,12 @@
-import { IsNotEmpty, IsString, IsOptional } from 'class-validator';
+import { IsBoolean, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class CreateClienteDto {
-  @IsNotEmpty()
   @IsString()
-  id: string;
-
-  @IsNotEmpty()
-  @IsString()
+  @MinLength(2)
+  @MaxLength(255)
   nome: string;
 
   @IsOptional()
-  @IsString()
-  imagem?: string;
+  @IsBoolean()
+  ativo?: boolean;
 }

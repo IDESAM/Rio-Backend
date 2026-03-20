@@ -17,4 +17,3 @@ export class SAF {
   @Column('text', { array: true, nullable: true })
   imagens?: string[];
 }
-
